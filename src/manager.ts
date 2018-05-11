@@ -4,6 +4,7 @@ import { parse as parseJsonc, ParseError } from 'jsonc-parser';
 import * as path from 'path';
 import { Client, ConnectConfig } from 'ssh2';
 import * as vscode from 'vscode';
+import FileSystemSearcher from './fileSystemSearcher';
 import { getSession as getPuttySession } from './putty';
 import SSHFileSystem, { EMPTY_FILE_SYSTEM } from './sshFileSystem';
 import { catchingPromise, toPromise } from './toPromise';
@@ -92,7 +93,7 @@ function createConfigFs(manager: Manager): SSHFileSystem {
   } as any;
 }
 
-export class Manager implements vscode.FileSystemProvider, vscode.TreeDataProvider<string> {
+export class Manager implements vscode.FileSystemProvider, vscode.TreeDataProvider<string>, vscode.SearchProvider {
   public onDidChangeTreeData: vscode.Event<string>;
   public onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]>;
   protected fileSystems: SSHFileSystem[] = [];
@@ -319,6 +320,13 @@ export class Manager implements vscode.FileSystemProvider, vscode.TreeDataProvid
     const folders = vscode.workspace.workspaceFolders!;
     folders.filter(f => f.uri.scheme === 'ssh').forEach(f => configs.indexOf(f.uri.authority) === -1 && configs.push(f.uri.authority));
     return configs;
+  }
+  /* SearchProvider */
+  public async provideFileSearchResults(query: string, progress: vscode.Progress<vscode.Uri>, token: vscode.CancellationToken): Promise<void> {
+    return new FileSystemSearcher(this).provideFileSearchResults(query, progress, token);
+  }
+  public async provideTextSearchResults(query: vscode.TextSearchQuery, options: vscode.TextSearchOptions, progress: vscode.Progress<vscode.TextSearchResult>, token: vscode.CancellationToken): Promise<void> {
+    return new FileSystemSearcher(this).provideTextSearchResults(query, options, progress, token);
   }
   /* Commands (stuff for e.g. context menu for ssh-configs tree) */
   public commandDisconnect(name: string) {

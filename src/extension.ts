@@ -29,7 +29,8 @@ export function activate(context: vscode.ExtensionContext) {
   const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) =>
     subscribe(vscode.commands.registerCommand(command, callback, thisArg));
 
-  subscribe(vscode.workspace.registerFileSystemProvider('ssh', manager, { isCaseSensitive: true }));
+  subscribe(workspace.registerFileSystemProvider('ssh', manager, { isCaseSensitive: true }));
+  subscribe(workspace.registerSearchProvider('ssh', manager));
 
   async function pickAndClick(func: (name: string) => void, name?: string, activeOrNot?: boolean) {
     name = name || await pickConfig(manager, activeOrNot);
@@ -48,4 +49,5 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand('sshfs.delete', (name?: string) => pickAndClick(manager.commandDelete, name));
 
   vscode.window.createTreeView('sshfs-configs', { treeDataProvider: manager });
+
 }
