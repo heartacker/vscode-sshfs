@@ -88,8 +88,12 @@ export class SSHFileSystem implements vscode.FileSystemProvider {
       const stream = this.sftp.createReadStream(this.relative(uri.path), { autoClose: true });
       const bufs = [];
       stream.on('data', bufs.push.bind(bufs));
-      stream.on('error', reject);
+      stream.on('error', (error) => {
+        console.error(uri.toString(), error.message);
+        reject(error);
+      });
       stream.on('close', () => {
+        console.log('Closed', uri.toString());
         resolve(new Uint8Array(Buffer.concat(bufs)));
       });
     });
