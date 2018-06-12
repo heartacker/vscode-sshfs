@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { invalidConfigName, loadConfigs } from './config';
 import { MemFs } from './fileSystemProvider';
+import { FileSystemSearcher } from './fileSystemSearcher';
 import { Manager } from './manager';
 
 const workspace = vscode.workspace;
@@ -31,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
     subscribe(vscode.commands.registerCommand(command, callback, thisArg));
 
   subscribe(workspace.registerFileSystemProvider('ssh', manager, { isCaseSensitive: true }));
-  subscribe(workspace.registerSearchProvider('ssh', manager));
+  subscribe(workspace.registerSearchProvider('ssh', new FileSystemSearcher(manager)));
 
   async function pickAndClick(func: (name: string) => void, name?: string, activeOrNot?: boolean) {
     name = name || await pickConfig(manager, activeOrNot);
