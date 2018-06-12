@@ -3,7 +3,7 @@
     "displayName": "SSH FS",
     "description": "File system provider using SSH",
     "publisher": "Kelvin",
-    "version": "1.4.0",
+    "version": "1.7.1",
     "engines": {
         "vscode": "^1.24.0-insider"
     },
@@ -138,7 +138,7 @@
             "properties": {
                 "sshfs.configs": {
                     "$schema": "http://json-schema.org/draft-06/schema#",
-                    "$ref": "https://raw.githubusercontent.com/SchoofsKelvin/vscode-sshfs/f9940ae1ad04917eef024c45a434b6b19f166fe4/settingsschema.json",
+                    "$ref": "https://raw.githubusercontent.com/SchoofsKelvin/vscode-sshfs/f4acd6be1e0bb9a3b0a41354221a0c1ad51c38e2/settingsschema.json",
                     "default": [
                         {
                             "root": "/tmp",
@@ -154,7 +154,7 @@
         "jsonValidation": [
             {
                 "fileMatch": "*.sshfs.jsonc",
-                "url": "https://raw.githubusercontent.com/SchoofsKelvin/vscode-sshfs/f9940ae1ad04917eef024c45a434b6b19f166fe4/configschema.json"
+                "url": "https://raw.githubusercontent.com/SchoofsKelvin/vscode-sshfs/f4acd6be1e0bb9a3b0a41354221a0c1ad51c38e2/configschema.json"
             }
         ]
     },
@@ -173,6 +173,7 @@
     },
     "dependencies": {
         "jsonc-parser": "^2.0.0",
+        "socks": "^2.2.0",
         "ssh2": "^0.6.0",
         "winreg": "^1.2.4"
     }

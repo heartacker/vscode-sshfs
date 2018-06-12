@@ -10,15 +10,21 @@ const winreg = new Winreg({
 
 export type NumberAsBoolean = 0 | 1;
 export interface PuttySession {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
+  // General settings
   name: string;
   hostname: string;
   protocol: string;
   portnumber: number;
-  username: string;
+  username?: string;
   usernamefromenvironment: NumberAsBoolean;
   tryagent: NumberAsBoolean;
-  publickeyfile: string;
+  publickeyfile?: string;
+  // Proxy settings
+  proxyhost?: string;
+  proxyport: number;
+  proxylocalhost: NumberAsBoolean;
+  proxymethod: number; // Key of ['None', 'SOCKS 4', 'SOCKS 5', 'HTTP', 'Telnet', 'Local'] // Only checked first 3
 }
 
 function valueFromItem(item: Winreg.RegistryItem) {
@@ -57,5 +63,5 @@ export async function getSession(name?: string, host?: string, username?: string
   const hosts = sessions.filter(s => s.hostname.toLowerCase() === host);
   if (!username) return hosts[0] || null;
   username = username.toLowerCase();
-  return hosts.find(s => s.username.toLowerCase() === username) || null;
+  return hosts.find(s => !s.username || s.username.toLowerCase() === username) || null;
 }
