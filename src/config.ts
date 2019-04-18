@@ -6,6 +6,8 @@ import { ConfigLocation, FileSystemConfig, invalidConfigName } from './fileSyste
 import * as Logging from './logging';
 import { toPromise } from './toPromise';
 
+import('./openSSH').catch(console.error);
+
 function randomAvailableName(configs: FileSystemConfig[], index = 0): [string, number] {
   let name = index ? `unnamed${index}` : 'unnamed';
   while (configs.find(c => c.name === name)) {
