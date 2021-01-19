@@ -19,7 +19,9 @@ const DEFAULT_CONFIG: ConnectConfig = {
 
 function replaceVariables(string?: string) {
   if (typeof string !== 'string') return string;
-  return string.replace(/\$\w+/g, key => process.env[key.substr(1)] || '');
+  return string
+    .replace(/\${(\w+)}/g, (_, key) => process.env[key.substr(1)] || '')
+    .replace(/\$\w+/g, key => process.env[key.substr(1)] || '')
 }
 
 const PROMPT_FIELDS: Partial<Record<keyof FileSystemConfig, [
